@@ -2,13 +2,15 @@
   <div class="baseBox">
     <!-- 顶部导航 -->
     <div class="topArea">
-      <div class="logo">DARKLOADER</div>
+      <div class="logo" @click="turnHome">DARKLOADER</div>
     </div>
     <div class="main">
-      <div class="sideMenu" >
-        <sideMenu @nodeClick="nodeClick"></sideMenu>
+      <div class="sideMenu">
+        <sideMenu @nodeClick="nodeClick" :menus="menus"></sideMenu>
       </div>
-      <div class="infoArea"></div>
+      <div class="infoArea">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -20,22 +22,38 @@ export default {
     return {
       count: 0,
       set: 1,
+      menus: [
+        {
+          name: "网站资源",
+          url: "/collection",
+          icon: "Collection",
+        },
+        {
+          name: "哲理感悟",
+          url: "/article",
+          icon: "Tickets",
+        },
+      ],
     };
   },
-  components:{
-    sideMenu
+  components: {
+    sideMenu,
   },
   mounted() {},
   methods: {
-    nodeClick(val){
-      console.log(val);
-    }
+    turnHome() {
+      this.$router.push("/");
+    },
+    nodeClick(val) {
+      this.$router.push(val.url);
+    },
   },
 };
 </script>
 
 <style scss scoped>
 .baseBox {
+  color: #333;
   height: 100%;
   width: 100%;
   display: flex;
@@ -50,6 +68,8 @@ export default {
     .logo {
       font-size: 22px;
       font-weight: 700;
+      cursor: pointer;
+      user-select: none;
     }
   }
   .main {
@@ -57,6 +77,8 @@ export default {
     display: flex;
     .infoArea {
       flex: 1;
+      box-sizing: border-box;
+      padding: 20px;
     }
   }
 }

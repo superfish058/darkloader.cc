@@ -10,4 +10,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData: `@import "./src/style.scss";`,
+      },
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000", // 要代理的域名
+        changeOrigin: true, //允许跨域
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

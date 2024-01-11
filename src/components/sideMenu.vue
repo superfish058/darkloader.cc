@@ -2,7 +2,8 @@
   <div class="baseBox" :style="{ width: trueWidth + 'px' }">
     <div class="menuList">
       <div class="mItem" v-for="(item, index) in menus" :key="index" @click="nodeClick(item)">
-        {{ item.name }}
+        <el-icon size="16"><component :is="item.icon || 'Star'"></component></el-icon>
+        <div class="text">{{ item.name }}</div>
       </div>
     </div>
     <div class="hideBtn">
@@ -18,6 +19,10 @@
 </template>
 
 <script>
+/******************************
+ * 侧边栏组件-2024-01-10
+ * defWidth-菜单宽度 menus-菜单列表
+ ******************************/
 export default {
   data() {
     return {
@@ -65,9 +70,9 @@ export default {
       }
     },
     // 点击节点
-    nodeClick(item){
-      this.$emit('nodeClick',item)
-    }
+    nodeClick(item) {
+      this.$emit("nodeClick", item);
+    },
   },
 };
 </script>
@@ -92,17 +97,23 @@ export default {
     .mItem {
       width: 93%;
       display: flex;
-      font-size: 15px;
+      font-size: 16px;
       align-items: center;
       white-space: nowrap;
       height: 40px;
       border-radius: 4px;
       padding-left: 6px;
       box-sizing: border-box;
+      letter-spacing: 0.02em;
       cursor: pointer;
       user-select: none;
+      .el-icon {
+        transform: translateY(1px);
+        margin-right: 4px;
+      }
       &:hover {
         background-color: #f5f7fa;
+        color: #278cf0;
       }
     }
   }
