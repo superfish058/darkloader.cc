@@ -31,7 +31,7 @@ export default {
     },
     blank: {
       default: false,
-    },
+    },//点击背景关闭
   },
   mounted() {
     this.showMaskTrue = this.showMask;
