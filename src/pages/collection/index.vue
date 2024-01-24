@@ -2,7 +2,13 @@
   <div class="baseBox">
     <div class="lineArea" v-for="(item, index) in lineKeys" :key="index">
       <!-- 分类标题 -->
-      <div class="lineTitle" @dblclick="turnEdit">{{ item.name }}</div>
+      <div class="lineTitle" @dblclick="turnEdit">{{ item.name }}
+        <div class="tag" v-show="editMode">
+          <el-icon size="20" @click="removeTag(item)">
+            <Remove />
+          </el-icon>
+        </div>
+      </div>
       <!-- 网站 -->
       <div class="lineWebs">
         <div class="lItemPlus" v-for="(ite, indx) in myWebs[item.name]?.webs" :key="indx" @click="turnWebs(ite)">
@@ -43,7 +49,7 @@
       </div>
     </div>
     <!-- 添加分类 -->
-    <topMask v-if="showMaskCate" @maskClick="showMaskCate = false" width="350" height="200">
+    <topMask v-if="showMaskCate" @maskOff="showMaskCate = false" width="350" height="200">
       <div class="maskBox">
         <div class="title">分类添加</div>
         <div class="form">
@@ -65,7 +71,7 @@
       </div>
     </topMask>
     <!-- 添加网站 -->
-    <topMask v-if="showMask" @maskClick="maskClick" width="450" height="500">
+    <topMask v-if="showMask" @maskOff="maskOff" width="450" height="500">
       <div class="maskBox">
         <div class="title">{{maskTitle}}</div>
         <div class="form">
@@ -156,6 +162,34 @@
       this.getList()
     },
     methods: {
+      // 删除标签
+      removeTag(item) {
+        console.log(item)
+        ElMessageBox.confirm(
+          '确认删除标签-' + item.name,
+          '提示',
+          {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(async () => {
+            let res = await this.axios.post('/api/collection/CateDelete', { id: item.id })
+            if (res.data.code == 200) {
+              this.getCates()
+              this.$notify({
+                title: '操作成功',
+                message: '标签删除成功',
+                type: 'success',
+                duration: 2000
+              });
+            }
+          })
+          .catch(() => {
+            console.log('取消操作');
+          })
+      },
       // 删除网站
       delItem(item) {
         ElMessageBox.confirm(
@@ -168,7 +202,7 @@
           }
         )
           .then(async () => {
-            let res = await this.axios.post('api/collection/delete', { id: item.id })
+            let res = await this.axios.post('/api/collection/delete', { id: item.id })
             if (res.data.code == 200) {
               this.getList()
               this.$notify({
@@ -190,7 +224,7 @@
           this.$notify({
             title: '网页编辑模式开启',
             message: 'Web page editing mode is on',
-            type: 'info',
+            type: 'success',
             duration: 2000
           });
         } else {
@@ -332,7 +366,7 @@
         this.showMask = false;
       },
       // 遮罩点击，此处无效
-      maskClick(val) {
+      maskOff(val) {
         this.showMask = false;
       },
     },
@@ -433,6 +467,24 @@
         margin-bottom: 25px;
         user-select: none;
         cursor: default;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        .tag{
+          display: flex;
+          align-items: center;
+          height: 100%;
+        }
+
+        svg {
+          cursor: pointer;
+
+          &:hover {
+            color: #409eff;
+          }
+
+        }
+
       }
 
       .lineWebs {

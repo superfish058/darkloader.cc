@@ -33,6 +33,11 @@ export default {
           url: "/article",
           icon: "Tickets",
         },
+        {
+          name: "模块测试",
+          url: "/games",
+          icon: "SwitchFilled",
+        },
       ],
     };
   },
