@@ -12,8 +12,8 @@
         <router-view></router-view>
       </div>
     </div>
-    <div class="sub" v-else>
-      <div class="loginPage" v-if="!isFish">
+    <div class="sub" v-if="mode == 'mobile'&&!isFish">
+      <div class="loginPage">
         <div class="title">
           DARKLOADER
         </div>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="password">
-          <div class="name">密码</div>
+          <div class="name">密码：</div>
           <div class="value">
             <el-input v-model="password"></el-input>
           </div>
@@ -33,7 +33,9 @@
           <div class="login" @click="handleLogin">登录</div>
         </div>
       </div>
-
+    </div>
+    <div class="page" v-if="mode == 'mobile'&&isFish">
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -71,6 +73,13 @@
     },
     components: {
       sideMenu,
+    },
+    watch: {
+      isFish(val) {
+        if (val) {
+          this.$router.push('/note')
+        }
+      }
     },
     mounted() {
       this.judgeMobile()
@@ -207,6 +216,11 @@
 
         }
       }
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
     }
   }
 </style>

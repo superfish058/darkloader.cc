@@ -1,6 +1,6 @@
 <template>
   <div class="baseBox" @click.self="maskClick">
-    <div class="dialog" :style="{ width: width + 'px', height: height + 'px' }">
+    <div class="dialog" :style="{ width: perWidth?(perWidth + '%'):(width + 'px'), height: height + 'px' }">
       <div class="cancel" @click="cancel">
         <el-icon :size="22">
           <Close />
@@ -21,19 +21,26 @@
       };
     },
     props: {
+      // 百分比宽度
+      perWidth:{
+        default:0
+      },
       // 展示遮罩
       showMask: {
         default: false,
       },
+      // 宽度
       width: {
         default: 800,
       },
+      // 高度
       height: {
         default: 600,
       },
+      //点击背景关闭
       blank: {
         default: false,
-      },//点击背景关闭
+      },
     },
     mounted() {
       this.showMaskTrue = this.showMask;
