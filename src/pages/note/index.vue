@@ -1,7 +1,7 @@
 <template>
   <div class="outBox">
     <!-- 导航内容 -->
-    <div class="baseBox" v-show="!editMode">
+    <div class="baseBox" v-show="!editMode&&curTab.name=='笔记'">
       <div class="top">
         <div class="left">{{curTab.name}}</div>
         <div class="center">
@@ -14,7 +14,8 @@
         </div>
       </div>
       <!-- 笔记 -->
-      <div class="bMain" v-show="curTab.name=='笔记'">
+      <div class="bMain">
+        <!-- 分类集合 -->
         <div class="slider">
           <div class="sItem" @click="selectSlider({name:'全部'})" :class="{active:curSlider?.name=='全部'}">全部</div>
           <div class="sItem" v-for="item,index in sliders" :key="index" @click="selectSlider(item)"
@@ -38,13 +39,24 @@
             </div>
           </div>
         </div>
+        <!-- 笔记列表 -->
         <div class="bBox">
-          <div class="bxItem" v-for="item,index in noteList" :key="index?.id">
-            <div class="type">
-              {{item.type}}
+          <div class="bxItem" v-for="item,index in noteList" :key="item?.id" @click="showNoteDetail(item)">
+            <div class="del" v-show="showAdd">
+              <el-icon size="20" @click.stop="delNoteItem(item)">
+                <Remove />
+              </el-icon>
             </div>
-            <div class="desc">
-              {{setDesc(item.content)}}
+            <div class="type">
+              {{item.type?.slice(0,1)}}
+            </div>
+            <div class="other">
+              <div class="title">
+                {{item.title}}
+              </div>
+              <div class="desc">
+                {{setDesc(item.content)}}
+              </div>
             </div>
           </div>
         </div>
@@ -52,14 +64,9 @@
           <div class="icon">+</div>
         </div>
       </div>
-      <!-- 日程 -->
-      <div class="bMain" v-show="curTab.name=='日程'">
-        1
-      </div>
-
     </div>
     <!-- 编辑页 -->
-    <div class="baseBox" v-show="editMode">
+    <div class="baseBox" v-show="editMode&&curTab.name=='笔记'">
       <div class="top">
         <div class="left" @click="editMode=false">
           <el-icon>
@@ -67,7 +74,7 @@
           </el-icon>
         </div>
         <div class="center">
-          <div class="text">添加笔记</div>
+          <div class="text">{{editPage.hasOwnProperty('id')?'编辑笔记':'添加笔记'}}</div>
         </div>
         <div class="right">
           &nbsp;
@@ -109,7 +116,7 @@
       </div>
     </div>
     <!-- 笔记-更多 -->
-    <div class="menus" v-show="menuShow" @click="menuShow=!menuShow">
+    <div class="menus" v-show="menuShow" @click="menuShow=!menuShow&&curTab.name=='笔记'">
       <div class="main">
         <!-- 编辑分类 -->
         <div class="mItem" @click.stop="showAdd=!showAdd">
@@ -129,7 +136,7 @@
       </div>
     </div>
     <!-- 分类添加-->
-    <topMask v-if="showSliderAdd" @maskOff="showSliderAdd = false" perWidth="90" height="230" blank>
+    <topMask v-if="showSliderAdd&&curTab.name=='笔记'" @maskOff="showSliderAdd = false" perWidth="90" height="230" blank>
       <div class="maskBox">
         <div class="title">
           添加分类
@@ -165,6 +172,13 @@
         </div>
       </div>
     </topMask>
+    <!-- 其他 -->
+    <div class="baseBox" v-show="curTab.name!=='笔记'">
+      <!-- 日程 -->
+      <div class="other" v-if="curTab.name=='日程'">
+        <schedule></schedule>
+      </div>
+    </div>
     <!-- 底部导航 -->
     <div class="tabBar">
       <div class="tItem" v-for="item,index in tabBars" :key="index" @click="selectTab(item)">
@@ -184,6 +198,7 @@
 <script>
   import { ElMessage, ElMessageBox } from 'element-plus'
   import topMask from "@/components/topMask.vue";
+  import schedule from "./schedule.vue";
   export default {
     data() {
       return {
@@ -236,21 +251,55 @@
       this.setDate()
       this.getSliders()
     },
-    watch:{
-      curSlider:{
-        handler(val){
+    watch: {
+      curSlider: {
+        handler(val) {
           this.getNoteList(val?.name)
         },
-        deep:true,
-        immediate:true
+        deep: true,
+        immediate: true
       }
     },
     components: {
-      topMask
+      topMask,
+      schedule
     },
     methods: {
-      setDesc(text){
-        return text.slice(0,6)
+      // 删除笔记
+      delNoteItem(item) {
+        ElMessageBox.confirm(
+          '确认删除当前笔记-' + item.title,
+          '提示',
+          {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(async () => {
+            let res = await this.axios.post('/api/note/delete', { id: item.id })
+            if (res.data.code == 200) {
+              this.getNoteList()
+              this.$notify({
+                title: '操作成功',
+                message: '删除成功',
+                type: 'success',
+                duration: 1000
+              });
+            }
+          })
+      },
+      // 笔记详情
+      showNoteDetail(item) {
+        this.editMode = true
+        this.editPage = item
+      },
+      // 笔记简述
+      setDesc(text) {
+        if (text.length > 6) {
+          return text.slice(0, 6) + '...'
+        }
+        return text
       },
       // 笔记上传
       editSubmit() {
@@ -260,27 +309,43 @@
             type: 'warning',
           })
         }
-        this.axios.post('/api/note/add', this.editPage).then(res => {
-          if (res.data.code == 200) {
-            this.getNoteList(this.curSlider.name)
-            ElMessage({
-              message: '添加成功',
-              type: 'success',
-            })
-            this.editMode = false
-          }
-        })
+        // 修改
+        if (this.editPage.hasOwnProperty('id')) {
+          this.axios.post('/api/note/update', this.editPage).then(res => {
+            if (res.data.code == 200) {
+              this.getNoteList(this.curSlider.name)
+              ElMessage({
+                message: '修改成功',
+                type: 'success',
+              })
+              this.editMode = false
+            }
+          })
+        } else {
+          // 添加
+          this.axios.post('/api/note/add', this.editPage).then(res => {
+            if (res.data.code == 200) {
+              this.getNoteList(this.curSlider.name)
+              ElMessage({
+                message: '添加成功',
+                type: 'success',
+              })
+              this.editMode = false
+            }
+          })
+        }
       },
       //获取笔记列表
-      getNoteList(name){
-        let namePro = name=='全部'?'':name
-        this.axios.get('/api/note/list?type='+ namePro).then(res=>{
+      getNoteList(name) {
+        let namePro = name == '全部' ? '' : name
+        this.axios.get('/api/note/list?type=' + namePro).then(res => {
           this.noteList = res.data.data
         })
       },
       // 添加笔记
       addNote() {
         this.editPage.type = this.curSlider.name
+        this.editPage = {}
         this.editMode = true
       },
       // 选择底部导航
@@ -484,6 +549,10 @@
     flex-direction: column;
     padding: 10px;
 
+    .other {
+      flex: 1;
+    }
+
     .top {
       display: flex;
       justify-content: space-between;
@@ -623,7 +692,7 @@
             height: 100%;
           }
 
-          ::v-deep .el-textarea__inner {
+          :deep(.el-textarea__inner) {
             height: 100%;
           }
         }
@@ -641,6 +710,64 @@
 
     .bBox {
       flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-content: flex-start;
+
+      .bxItem {
+        width: 48%;
+        margin-right: 4%;
+        margin-bottom: 10px;
+        height: 60px;
+        display: flex;
+        border-width: 0;
+        box-shadow: 0 0 20px -5px #9e9e9e40;
+        border-radius: 4px;
+        box-sizing: border-box;
+        padding: 5px 5px 5px 10px;
+        gap: 5px;
+        align-items: center;
+        position: relative;
+
+        .del {
+          position: absolute;
+          right: 2px;
+          top: 2px;
+        }
+
+        .type {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          height: 80%;
+          aspect-ratio: 1;
+          background-color: #409eff;
+          color: #fff;
+          box-sizing: border-box;
+          padding-bottom: 2px;
+        }
+
+        .other {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .title {
+            font-size: 15px;
+            font-weight: 700;
+          }
+
+          .desc {
+            font-size: 14px;
+          }
+        }
+
+        &:nth-child(2n) {
+          margin-right: 0;
+        }
+      }
     }
 
 
