@@ -19,7 +19,7 @@
       <div class="model">
         <component :is="curTab.model"></component>
       </div>
-    </topMask>
+    </topMask> 
   </div>
 </template>
 
@@ -30,6 +30,7 @@ import move from "./move.vue";
 import shoot from "./shoot.vue";
 import drag from "./drag.vue";
 import dance from "./dance.vue";
+import choice from "./choice.vue";
 
 export default {
   data() {
@@ -55,6 +56,10 @@ export default {
           name: "街舞模拟",
           model: "dance",
         },
+        {
+          name: "抽奖模拟",
+          model: "choice",
+        },
       ], //标签
       curTab: null, //当前标签
       showMask: false, //遮罩开关
@@ -66,7 +71,8 @@ export default {
     move,
     shoot,
     drag,
-    dance
+    dance,
+    choice
   },
   mounted() {},
   methods: {
