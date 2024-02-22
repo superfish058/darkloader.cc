@@ -344,8 +344,9 @@
       },
       // 添加笔记
       addNote() {
-        this.editPage.type = this.curSlider.name
         this.editPage = {}
+        this.editPage.type = this.curSlider.name
+    
         this.editMode = true
       },
       // 选择底部导航
@@ -412,6 +413,7 @@
       addClass() {
         this.sliderName = ''
         this.sliderType = ''
+
         this.showSliderAdd = true
       },
       // 展示菜单
