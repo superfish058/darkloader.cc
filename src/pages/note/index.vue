@@ -104,6 +104,14 @@
           <div class="value">
             <el-input v-model="editPage.content" maxlength="300" placeholder="输入内容" show-word-limit type="textarea" />
           </div>
+          <div class="createTime" v-if="editPage?.createdAt">
+            <div class="time">创建日期：</div>
+            <div class="timeValue">{{editPage?.createdAt?.slice(0,10)}}</div>
+          </div>
+          <div class="createTime" v-else>
+            <div class="time">更新日期：</div>
+            <div class="timeValue">{{editPage?.updatedAt?.slice(0,10)}}</div>
+          </div>
           <div class="btns">
             <div class="confirm">
               <el-button type="primary" @click="editSubmit">确定</el-button>
@@ -707,6 +715,14 @@
           align-items: center;
           justify-content: space-around;
         }
+      }
+      .createTime{
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        box-sizing: border-box;
+        padding-right: 1px;
+        font-size: 13px;
       }
     }
 

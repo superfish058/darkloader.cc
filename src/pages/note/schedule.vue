@@ -664,6 +664,9 @@
                     display: flex;
                     align-items: center;
                     margin-top: 5px;
+                    .name{
+                        white-space: nowrap;
+                    }
                 }
             }
 
@@ -764,6 +767,7 @@
                     .input {
                         flex: 1;
                         border-bottom: 1px solid gray;
+                        display: flex;
 
                         input {
                             width: 100%;
