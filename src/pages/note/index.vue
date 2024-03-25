@@ -354,7 +354,7 @@
       addNote() {
         this.editPage = {}
         this.editPage.type = this.curSlider.name
-    
+
         this.editMode = true
       },
       // 选择底部导航
@@ -592,6 +592,8 @@
       flex-direction: column;
       flex: 1;
       position: relative;
+      height: calc(100% - 50px);
+      overflow: hidden;
 
       .addBtnBlue {
         position: absolute;
@@ -716,7 +718,8 @@
           justify-content: space-around;
         }
       }
-      .createTime{
+
+      .createTime {
         display: flex;
         width: 100%;
         justify-content: flex-end;
@@ -732,6 +735,7 @@
       flex-wrap: wrap;
       flex-direction: row;
       align-content: flex-start;
+      overflow: auto;
 
       .bxItem {
         width: 48%;
