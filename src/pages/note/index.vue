@@ -102,7 +102,7 @@
         <div class="line rest">
           <div class="name">内容:</div>
           <div class="value">
-            <el-input v-model="editPage.content" maxlength="300" placeholder="输入内容" show-word-limit type="textarea" />
+            <el-input v-model="editPage.content" maxlength="1500" placeholder="输入内容" show-word-limit type="textarea" />
           </div>
           <div class="createTime" v-if="editPage?.createdAt">
             <div class="time">创建日期：</div>
