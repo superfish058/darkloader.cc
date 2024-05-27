@@ -3,6 +3,7 @@ import collection from "@/pages/collection/index.vue";
 import article from "@/pages/article/index.vue";
 import games from "@/pages/games/index.vue";
 import note from "@/pages/note/index.vue";
+import phone from "@/pages/phone/index.vue";
 const Home = () => import("../pages/home/index.vue");
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
       { path: "/note", component: note },
       { path: "/article", component: article },
       { path: "/games", component: games },
+      { path: "/phone", component: phone },
     ],
   },
 ];

@@ -12,7 +12,7 @@
         <router-view></router-view>
       </div>
     </div>
-    <div class="sub" v-if="mode == 'mobile'&&!isFish">
+    <div class="sub" v-if="mode == 'mobile'&&!isFish&&!isSis">
       <div class="loginPage">
         <div class="title">
           DARKLOADER
@@ -37,6 +37,9 @@
     <div class="page" v-if="mode == 'mobile'&&isFish">
       <router-view></router-view>
     </div>
+    <div class="page" v-if="mode == 'mobile'&&isSis">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -47,6 +50,7 @@
     data() {
       return {
         isFish: false,
+        isSis: false,
         account: 'darkLoader',
         password: '',
         mode: 'PC',
@@ -77,7 +81,15 @@
     watch: {
       isFish(val) {
         if (val) {
-          this.$router.push('/note')
+          const ignoreArr = ['/phone']
+          if (!ignoreArr.includes(this.$route.path)) {
+            this.$router.push('/note')
+          }
+        }
+      },
+      isSis(val) {
+        if (val) {
+          this.$router.push('/phone')
         }
       }
     },
@@ -95,6 +107,16 @@
           }
           localStorage.setItem('password', this.password)
           this.isFish = true
+          ElMessage({
+            message: '登录成功',
+            type: 'success',
+          })
+        } else if (this.password == '123456') {
+          if (type == 1) {
+            return this.isSis = true
+          }
+          localStorage.setItem('password', this.password)
+          this.isSis = true
           ElMessage({
             message: '登录成功',
             type: 'success',

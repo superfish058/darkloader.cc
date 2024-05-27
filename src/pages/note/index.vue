@@ -256,6 +256,7 @@
       };
     },
     mounted() {
+      this.judgeFish()
       this.setDate()
       this.getSliders()
     },
@@ -273,6 +274,14 @@
       schedule
     },
     methods: {
+      //判断本人
+      judgeFish(){
+        if(localStorage.getItem('password')!=='superfish058'){
+          // 清空password
+          localStorage.removeItem('password')
+          this.$router.push('/home')
+        }
+      },
       // 删除笔记
       delNoteItem(item) {
         ElMessageBox.confirm(
