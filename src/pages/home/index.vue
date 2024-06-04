@@ -2,7 +2,7 @@
   <div class="baseBox">
     <!-- 顶部导航 -->
     <div class="topArea" v-if="mode == 'PC'">
-      <div class="logo" @click="turnHome">DARKLOADER</div>
+      <div class="logo" @click="turnHome">个人编程日记</div>
     </div>
     <div class="main" v-if="mode == 'PC'">
       <div class="sideMenu">

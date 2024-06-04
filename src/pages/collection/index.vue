@@ -133,6 +133,10 @@
         </div>
       </div>
     </topMask>
+    <!-- 备案号 -->
+    <div class="mustNumber">
+      <a href="https://beian.miit.gov.cn/" target="_blank">备案号：浙ICP备2024060975号</a>
+    </div>
   </div>
 </template>
 
@@ -378,6 +382,27 @@
     height: 100%;
     width: 100%;
     color: #333;
+    position: relative;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+
+    .mustNumber{
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      transform: translateY(10px);
+      a{
+        font-size: 12px;
+        text-decoration:none;
+        color: gray;
+        &:hover{
+          color: #00a4ff;
+        }
+      }
+
+    }
 
     .center {
       justify-content: center;
@@ -470,7 +495,8 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        .tag{
+
+        .tag {
           display: flex;
           align-items: center;
           height: 100%;

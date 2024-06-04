@@ -7,7 +7,7 @@ import phone from "@/pages/phone/index.vue";
 const Home = () => import("../pages/home/index.vue");
 
 const routes = [
-  { path: "/", redirect: "/home" },
+  { path: "/", redirect: "/collection" },
   {
     path: "/home",
     component: Home,
