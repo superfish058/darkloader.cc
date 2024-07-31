@@ -1,5 +1,5 @@
 <template>
-  <div class="baseBox">
+  <div class="baseLayOut">
     <div class="lineArea" v-for="(item, index) in lineKeys" :key="index">
       <!-- 分类标题 -->
       <div class="lineTitle" @dblclick="turnEdit">{{ item.name }}
@@ -378,21 +378,20 @@
 </script>
 
 <style scss scoped>
-  .baseBox {
+  .baseLayOut {
     height: 100%;
     width: 100%;
     color: #333;
-    position: relative;
     padding-bottom: 50px;
     box-sizing: border-box;
+    overflow: auto;
 
     .mustNumber{
-      position: absolute;
-      bottom: 0;
+      position: fixed;
+      bottom: 10px;
       display: flex;
-      width: 100%;
-      justify-content: center;
-      transform: translateY(10px);
+      left: 50%;
+      transform: translateX(-50%);
       a{
         font-size: 12px;
         text-decoration:none;

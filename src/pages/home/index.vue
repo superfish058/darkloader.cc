@@ -162,6 +162,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     .topArea {
       height: 50px;
